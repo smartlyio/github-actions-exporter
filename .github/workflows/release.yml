@@ -3,6 +3,8 @@ name: Release
 on:
   push:
     branches: [smartlyio]
+  pull-request:
+    branches: [smartlyio]
 
 jobs:
   build:
