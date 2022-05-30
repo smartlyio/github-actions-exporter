@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches: [smartlyio]
-  pull-request:
+  pull_request:
     branches: [smartlyio]
 
 jobs:
