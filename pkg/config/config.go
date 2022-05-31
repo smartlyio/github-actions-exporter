@@ -12,12 +12,13 @@ var (
 		Refresh           int64
 		Repositories      cli.StringSlice
 		Organizations     cli.StringSlice
-		APIURL            string			
+		APIURL            string
 	}
 	Port  int
 	Debug bool
 	EnterpriseName    string
 	WorkflowFields    string
+	JobFields          string
 )
 
 // InitConfiguration - set configuration from env vars or command parameters
@@ -108,6 +109,13 @@ func InitConfiguration() []cli.Flag {
 			Usage:       "A comma separated list of fields for workflow metrics that should be exported",
 			Value:       "repo,id,node_id,head_branch,head_sha,run_number,workflow_id,workflow,event,status",
 			Destination: &WorkflowFields,
+		},
+		&cli.StringFlag{
+			Name:        "export_job_fields",
+			EnvVars:     []string{"EXPORT_JOB_FIELDS"},
+			Usage:       "A comma separated list of fields for workflow job metrics that should be exported",
+			Value:       "repo,id,name,node_id,head_branch,head_sha,run_id,workflow_id,workflow,status,conclusion,runner_id,runner_name",
+			Destination: &JobFields,
 		},
 	}
 }
