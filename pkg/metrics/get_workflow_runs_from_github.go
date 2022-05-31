@@ -48,6 +48,55 @@ func getRelevantFields(repo string, run *github.WorkflowRun) []string {
 	return result
 }
 
+
+func getRelevantJobFields(repo string, run *github.WorkflowRun, job *github.WorkflowJob) []string {
+	relevantFields := strings.Split(config.JobFields, ",")
+	result := make([]string, len(relevantFields))
+	for i, field := range relevantFields {
+		switch field {
+			case "id":
+			result[i] = strconv.FormatInt(*job.ID, 10)
+			case "name":
+			result[i] = *job.Name
+			case "node_id":
+			result[i] = *job.NodeID
+			case "head_sha":
+			result[i] = *job.HeadSHA
+			case "status":
+			result[i] = *job.Status
+			case "conclusion":
+			result[i] = *job.Conclusion
+			// case "runner_id":
+			// result[i] = strconv.FormatInt(*job.RunnerID, 10)
+			// case "runner_name":
+			// result[i] = *job.RunnerName
+			case "run_id":
+			result[i] = strconv.FormatInt(*run.ID, 10)
+			default:
+			result[i] = getFieldValue(repo, *run, field)
+		}
+	}
+	return result
+}
+
+
+func getWorkflowRunJobsFromGithub(repo string, run *github.WorkflowRun) {
+	r := strings.Split(repo, "/")
+	resp, _, err := client.Actions.ListWorkflowJobs(context.Background(), r[0], r[1], *run.ID, nil)
+	if err != nil {
+		log.Printf("ListWorkflowJobs error for %s: %s", repo, err.Error())
+	} else {
+		for _, job := range resp.Jobs {
+			fields := getRelevantJobFields(repo, run, job)
+
+			started := job.StartedAt.Time.Unix()
+			completed := job.CompletedAt.Time.Unix()
+			elapsed := completed - started
+			workflowRunJobDurationGauge.WithLabelValues(fields...).Set(float64(elapsed * 1000))
+		}
+	}
+}
+
 // getWorkflowRunsFromGithub - return informations and status about a workflow
 func getWorkflowRunsFromGithub() {
 	for {
@@ -82,6 +131,8 @@ func getWorkflowRunsFromGithub() {
 					} else {
 						workflowRunDurationGauge.WithLabelValues(fields...).Set(float64(resp.GetRunDurationMS()))
 					}
+
+					getWorkflowRunJobsFromGithub(repo, run)
 				}
 			}
 		}
