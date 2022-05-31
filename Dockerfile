@@ -1,5 +1,8 @@
 FROM golang:1.16 as builder
 
+ARG VERSION=
+ENV VERSION=$VERSION
+
 WORKDIR /app
 COPY . .
 RUN bash ./build.sh
