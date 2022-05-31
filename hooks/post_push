@@ -1,0 +1,8 @@
+#!/bin/bash
+
+COMMIT="$(git rev-parse HEAD)"
+SHORT_COMMIT="$(git rev-parse --short HEAD)"
+docker tag "$IMAGE_NAME" "$DOCKER_REPO:$COMMIT"
+docker tag "$IMAGE_NAME" "$DOCKER_REPO:$SHORT_COMMIT"
+docker push "$DOCKER_REPO:$COMMIT"
+docker push "$DOCKER_REPO:$SHORT_COMMIT"
