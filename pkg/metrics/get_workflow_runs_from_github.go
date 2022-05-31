@@ -68,10 +68,10 @@ func getRelevantJobFields(repo string, run *github.WorkflowRun, job *github.Work
 			result[i] = *job.Status
 			case "conclusion":
 			result[i] = *job.Conclusion
-			case "runner_id":
-			result[i] = strconv.FormatInt(*job.RunnerID, 10)
-			case "runner_name":
-			result[i] = *job.RunnerName
+			// case "runner_id":
+			// result[i] = strconv.FormatInt(*job.RunnerID, 10)
+			// case "runner_name":
+			// result[i] = *job.RunnerName
 			default:
 			result[i] = getFieldValue(repo, *run, field)
 		}
