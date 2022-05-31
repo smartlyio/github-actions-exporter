@@ -1,0 +1,4 @@
+#!/bin/bash
+
+COMMIT="$(git rev-parse HEAD)"
+docker build --build-arg "VERSION=$COMMIT" -f "$DOCKERFILE_PATH" -t "$IMAGE_NAME" .
