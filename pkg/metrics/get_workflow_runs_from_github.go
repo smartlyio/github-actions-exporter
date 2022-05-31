@@ -54,10 +54,8 @@ func getRelevantJobFields(repo string, run *github.WorkflowRun, job *github.Work
 	result := make([]string, len(relevantFields))
 	for i, field := range relevantFields {
 		switch field {
-			case "run_id":
-			result[i] = strconv.FormatInt(*job.ID, 10)
 			case "id":
-			result[i] = strconv.FormatInt(*run.ID, 10)
+			result[i] = strconv.FormatInt(*job.ID, 10)
 			case "name":
 			result[i] = *job.Name
 			case "node_id":
@@ -72,6 +70,8 @@ func getRelevantJobFields(repo string, run *github.WorkflowRun, job *github.Work
 			// result[i] = strconv.FormatInt(*job.RunnerID, 10)
 			// case "runner_name":
 			// result[i] = *job.RunnerName
+			case "run_id":
+			result[i] = strconv.FormatInt(*run.ID, 10)
 			default:
 			result[i] = getFieldValue(repo, *run, field)
 		}
