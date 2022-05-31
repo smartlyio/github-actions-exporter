@@ -16,10 +16,11 @@ import (
 )
 
 var (
-	client                   *github.Client
-	err                      error
-	workflowRunStatusGauge   *prometheus.GaugeVec
-	workflowRunDurationGauge *prometheus.GaugeVec
+	client                      *github.Client
+	err                         error
+	workflowRunStatusGauge      *prometheus.GaugeVec
+	workflowRunDurationGauge    *prometheus.GaugeVec
+	workflowRunJobDurationGauge *prometheus.GaugeVec
 )
 
 // InitMetrics - register metrics in prometheus lib and start func for monitor
